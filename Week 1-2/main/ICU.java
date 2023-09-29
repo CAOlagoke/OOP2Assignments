@@ -4,7 +4,6 @@ public class ICU {
 
     private String location;
     private ArrayList<Bed> beds;
-    private ArrayList<Patient> patients; //Create a method to Update list of patients
     private double currentAmtOfFTEs;
 
     public ICU(String location, double currentAmtOfFTEs) {
@@ -12,12 +11,6 @@ public class ICU {
         this.location = location;
         this.currentAmtOfFTEs = currentAmtOfFTEs;
         this.beds = new ArrayList<>();
-
-        if(this.beds.size() == 0){
-            this.patients = new ArrayList<>();
-        }else{
-            updatePatients();
-        }
 
     }
 
@@ -35,14 +28,6 @@ public class ICU {
 
     public void setBeds(ArrayList<Bed> beds) {
         this.beds = beds;
-    }
-
-    public ArrayList<Patient> getPatients() {
-        return patients;
-    }
-
-    public void setPatients(ArrayList<Patient> patients) {
-        this.patients = patients;
     }
 
     public double getCurrentAmtOfFTEs() {
@@ -77,7 +62,6 @@ public class ICU {
         return false;
     }
 
-
     public double calculatePatientFTE(Patient patient, ArrayList<Device> devices){
 
         double result = 0;
@@ -106,15 +90,11 @@ public class ICU {
         return result;
     }
 
-    public boolean AdmitNewPatient(Patient patient, ArrayList<Device> devices){
+    public boolean admitNewPatient(Patient patient, ArrayList<Device> devices) throws CodeBlackException{
 
-        if(BedisAvailable() == false){
+        if(!BedisAvailable()){
 
-            try{
-                throw new CodeBlackException("There's no free bed in " + getLocation());
-            } catch (CodeBlackException e) {
-                e.printStackTrace();
-            }
+            throw new CodeBlackException("There's no free bed in " + getLocation());
         }else{
             if(calculatePatientFTE(patient, devices) + getCurrentAmtOfFTEs() > totalFTEsRequired()){
                 return false;
@@ -130,11 +110,9 @@ public class ICU {
                 return true;
             }
         }
-
-        return false;
     }
 
-    public void updatePatients(){
+    public ArrayList<Patient> getPatients(){
 
         ArrayList<Patient> result = new ArrayList<>();
         for(Bed bed : getBeds()){
@@ -145,7 +123,7 @@ public class ICU {
             }
         }
 
-        setPatients(result);
+        return result;
     }
 
     public ArrayList<Bed> occupiedBeds(){
@@ -184,7 +162,6 @@ public class ICU {
         return result;
     }
 
-
     public double totalFTEsRequired(){
 
         double result = 0;
@@ -221,7 +198,7 @@ public class ICU {
                }else{
                    bPatient++;
                }
-                result+= ( (hMonitors * 0.3) + (bpMonitors * 0.1) + (cwPatient*1) + (bPatient*2) );
+                result+= ( (hMonitors * 0.3) + (bpMonitors * 0.1) + (cwPatient * 1) + (bPatient * 2) );
 
             }
         }else{//totalDependency > 5
@@ -247,12 +224,10 @@ public class ICU {
                 }else{
                     bPatient++;
                 }
-                result+= ( (hMonitors * 0.3) + (bpMonitors * 0.1) + (cwPatient*1) + (bPatient*2) + (totalDependency * 0.2) );
+                result+= ( (hMonitors * 0.3) + (bpMonitors * 0.1) + (cwPatient * 1) + (bPatient * 2) + (totalDependency * 0.2) );
 
             }
         }
         return result;
     }
-
-
 }

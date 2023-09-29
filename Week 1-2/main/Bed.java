@@ -1,5 +1,4 @@
 import java.util.*;
-import java.time.*;
 
 public class Bed {
 
@@ -40,18 +39,18 @@ public class Bed {
     public void setPatient(Patient patient) {
         this.patient = patient;
 
-        for(Device device : this.devices){
+        for(Device device : this.devices){                  ////Sets patient's details on the devices
             device.setPatient(patient);
         }
 
-        setOccupied(true);
+        setIsOccupied(true);
     }
 
-    public boolean isOccupied() {
+    public boolean getIsOccupied() {
         return isOccupied;
     }
 
-    public void setOccupied(boolean occupied) {
+    public void setIsOccupied(boolean occupied) {
         isOccupied = occupied;
     }
 
@@ -59,6 +58,8 @@ public class Bed {
     public void removePatient(){
 
         setPatient(null);
+        setIsOccupied(false);
+        setDevices(new ArrayList<>());
     }
 
     public void addDevice(Device device){
