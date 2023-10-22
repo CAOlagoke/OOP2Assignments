@@ -15,7 +15,7 @@ public class HeartRateMonitor extends Device{
         this.status = status;
     }
 
-
+    
     public String determineStatus(){
 
         String result ="";
